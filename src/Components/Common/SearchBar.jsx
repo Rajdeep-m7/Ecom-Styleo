@@ -20,7 +20,7 @@ function SearchBar() {
     >
       {isOpen ? (
         <form onSubmit={handleSubmit} className="flex justify-center items-center w-full">
-          <div className="relative w-1/2">
+          <div className="relative w-2/3 md:w-1/2">
             <input
               type="text"
               placeholder="search"
