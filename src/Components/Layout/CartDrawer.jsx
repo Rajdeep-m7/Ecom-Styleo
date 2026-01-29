@@ -1,8 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
  import { IoClose } from "react-icons/io5";
 import CartContent from '../Common/CartContent';
 
 function CartDrawer({cart , setCart}) {
+
+    useEffect(() => {
+    const handleBodyScroll = () => {
+      if (cart && window.innerWidth < 640) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "auto";
+      }
+    };
+
+    handleBodyScroll(); 
+
+    window.addEventListener("resize", handleBodyScroll);
+
+    return () => {
+      document.body.style.overflow = "auto";
+      window.removeEventListener("resize", handleBodyScroll);
+    };
+  }, [cart]);
     
   return (
     <div className={`fixed right-0 top-0 bg-white w-full sm:w-1/2 md:w-120 h-full transform transition-transform shadow-lg flex flex-col z-50 duration-300 ${cart ? "translate-x-0" : "translate-x-full"} `}>
