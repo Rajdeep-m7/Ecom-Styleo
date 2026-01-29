@@ -8,13 +8,13 @@ function TopBar() {
     <div className="bg-[#ea5e0e] text-white ">
       <div className="container mx-auto md:flex justify-between items-center md:px-4 py-2">
         <div className="hidden md:flex items-center space-x-4">
-          <a href="#" className="hover:text-gray-300">
+          <a href="#" className="hover:text-blue-500 transition">
             <TbBrandMeta className="h-5 w-5" />
           </a>
-          <a href="#" className="hover:text-gray-300">
+          <a href="#" className="hover:text-pink-500 transition">
             <IoLogoInstagram className="h-5 w-5" />
           </a>
-          <a href="#" className="hover:text-gray-300">
+          <a href="#" className="hover:text-sky-400 transition">
             <RiTwitterXLine className="h-5 w-5" />
           </a>
         </div>
