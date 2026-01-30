@@ -100,7 +100,7 @@ function NewArrivels() {
           <img src={item.image} className="w-full h-75 object-cover" />
           <div className="absolute bottom-0 left-0 p-3 w-full bg-black/40 backdrop-blur-2xl text-white">
             <p>{item.name}</p>
-            <p>{item.price}</p>
+            <p>${item.price}</p>
           </div>
         </div>
         </div>
