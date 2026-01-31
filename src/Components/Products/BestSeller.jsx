@@ -104,7 +104,7 @@ function BestSeller() {
               ))}
             </div>
             <p className="font-semibold my-2">quantity:</p>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-2">
               <p
                 className="p-1 bg-gray-100 w-fit"
                 onClick={() => setQuantity(quantity - 1)}

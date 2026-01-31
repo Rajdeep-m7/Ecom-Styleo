@@ -69,15 +69,15 @@ function YouMayAlsoLike() {
       </div>
       <div className='flex gap-5 md:gap-10 py-10 p-5 flex-wrap grow items-center justify-center'>
       {products.map((item) => (
-        <div key={item.id}>
-          <div className="overflow-hidden rounded-xl shadow-xl">
-          <img src={item.image} className="w-70 h-75 sm:w-60 sm:h-70 object-cover" />
-          <div className=" bottom-0 left-0 p-3 bg-black/40 backdrop-blur-2xl text-white">
+        <div key={item.id} className='hover:scale-105 transition-transform duration-200'>
+          
+          <img src={item.image} className="w-32 h-40 sm:w-55 sm:h-65 object-cover rounded-md " />
+          <div className=" font-semibold text-sm">
             <p>{item.name}</p>
             <p>${item.price}</p>
           </div>
         </div>
-        </div>
+        
       ))}
       </div>
     </div>

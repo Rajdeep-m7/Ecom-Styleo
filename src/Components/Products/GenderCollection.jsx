@@ -9,7 +9,7 @@ function GenderCollection() {
         <div  className='relative'>
             <img src={menCollection}  className='w-150 h-80 md:h-110 object-cover'/>
             <div className='p-5 bg-white/80 absolute left-2 bottom-3'>
-                <p>Women's collection</p>
+                <p>Men's collection</p>
                 <Link>Shop now</Link>
             </div>
         </div>
