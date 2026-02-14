@@ -1,7 +1,17 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv"
+import { connectDb } from "./config/db.js";
 
 const app = express();
-const PORT = 5000;
+app.use(express.json())
+app.use(cors());
+dotenv.config();
+
+
+const PORT = process.env.PORT;
+
+connectDb();
 
 app.get("/",(req,res)=>{
     res.send("welcome")
