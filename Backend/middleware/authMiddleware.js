@@ -18,8 +18,19 @@ const protect = async(req , res , next)=>{
         res.status(401).json({message:error.message})
     }
     else{
-        res.staus(401).json({message:"not authorized , no token available"})
+        res.status(401).json({message:"not authorized , no token available"})
     }
 }
 
-export default protect;
+//check admin
+
+const admin = async(req , res , next)=>{
+    if(req.user && req.user.role == "admin"){
+        next();
+    }
+    else{
+        res.status(401).json({message:"user is not a admin"})
+    }
+}
+
+export { protect, admin };
