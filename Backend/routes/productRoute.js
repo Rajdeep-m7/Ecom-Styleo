@@ -205,4 +205,71 @@ productRouter.get("/", async (req , res)=>{
   }
 })
 
+//bestseller highest rating products
+productRouter.get("/best-seller", async (req,res)=>{
+  try {
+    const product = await Product.findOne().sort({rating:-1});
+    if(product){
+      res.status(201).json(product);
+    }
+    else{
+      res.status(401).json({message:" best-seller product not found"});
+    }
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+productRouter.get("/new-arrivals",async(req,res)=>{
+  try {
+    const product = await Product.find().sort({createdAt:-1}).limit(8);
+    if(product){
+      res.status(201).json(product);
+    }
+    else{
+      res.status(401).json({message:" best-seller product not found"});
+    }
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+productRouter.get("/:id", async(req, res)=>{
+  try {
+    const product = await Product.findById(req.params.id);
+    if(product){
+      res.status(201).json(product);
+    }
+    else{
+      res.status(401).json({message:"Product not found"});
+    }
+    
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+//get similer products
+productRouter.get("/similer/:id",async(req , res)=>{
+  try {
+    const {id}= req.params;
+    const product = await Product.findById(id);
+    if(!product){
+      res.status(401).json({message:"Product not found"});
+    }
+    const similerProducts = await Product.find({
+      _id:{$ne : id},
+      gender: product.gender,
+      category: product.category,
+    }).limit(4);
+
+    res.json(similerProducts);
+
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+
+
 export default productRouter;
