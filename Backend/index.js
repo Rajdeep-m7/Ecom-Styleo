@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv"
 import { connectDb } from "./config/db.js";
-import userRoutes from "./routes/userRoute.js"
+import userRouter from "./routes/userRoute.js"
 import productRouter from "./routes/productRoute.js";
+import cartRouter from "./routes/cartRoute.js";
 
 const app = express();
 app.use(express.json())
@@ -18,8 +19,9 @@ app.get("/",(req,res)=>{
     res.send("welcome")
 })
 
-app.use("/api/users", userRoutes)
+app.use("/api/users", userRouter)
 app.use("/api/products",productRouter);
+app.use("/api/cart", cartRouter)
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

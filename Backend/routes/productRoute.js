@@ -213,7 +213,7 @@ productRouter.get("/best-seller", async (req,res)=>{
       res.status(201).json(product);
     }
     else{
-      res.status(401).json({message:" best-seller product not found"});
+      return res.status(401).json({message:" best-seller product not found"});
     }
   } catch (error) {
     res.status(500).send(error.message)
@@ -227,7 +227,7 @@ productRouter.get("/new-arrivals",async(req,res)=>{
       res.status(201).json(product);
     }
     else{
-      res.status(401).json({message:" best-seller product not found"});
+      return res.status(401).json({message:" best-seller product not found"});
     }
   } catch (error) {
     res.status(500).send(error.message)
@@ -241,7 +241,7 @@ productRouter.get("/:id", async(req, res)=>{
       res.status(201).json(product);
     }
     else{
-      res.status(401).json({message:"Product not found"});
+      return res.status(401).json({message:"Product not found"});
     }
     
   } catch (error) {
@@ -255,7 +255,7 @@ productRouter.get("/similer/:id",async(req , res)=>{
     const {id}= req.params;
     const product = await Product.findById(id);
     if(!product){
-      res.status(401).json({message:"Product not found"});
+      return res.status(401).json({message:"Product not found"});
     }
     const similerProducts = await Product.find({
       _id:{$ne : id},
