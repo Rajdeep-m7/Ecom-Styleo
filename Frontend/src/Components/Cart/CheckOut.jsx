@@ -37,14 +37,13 @@ function CheckOut() {
   const handleSubmit=(e)=>{
     e.preventDefault();
     setCheckOutId(123);
-    navigate("/order-confirm")
   }
 
   function handlePayment(details) {
   console.log(details);
-  console.log(details.id); /*
+  console.log(details.id); 
   console.log(details.payer.email_address);
-  console.log(details.purchase_units[0].payments.captures[0].id);*/
+  console.log(details.purchase_units[0].payments.captures[0].id);
   navigate("/order-confirm")
 }
 
@@ -174,8 +173,7 @@ function CheckOut() {
             />
           </div>
           <div className="mt-6">
-            <button className="w-full bg-black text-bold p-2 text-white rounded" type="submit">Pay COD</button>
-              {/*{!checkOutId ? (<button type="submit" className="w-full  bg-black text-white py-3 rounded">Continue to Payment</button> )
+              {!checkOutId ? (<button type="submit" className="w-full  bg-black text-white py-3 rounded">Continue to Payment</button> )
               : 
               (<div>
                 <p className="text-lg mb-4">Pay with Paypal</p>
@@ -184,7 +182,7 @@ function CheckOut() {
                 onSuccess={handlePayment}
                 onError={(err)=> alert(err.message)}
                 />
-              </div>)}*/}
+              </div>)}
           </div>
         </form>
       </div>
