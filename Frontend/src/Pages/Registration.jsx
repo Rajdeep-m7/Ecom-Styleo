@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import register from "../assets/assets/register.webp";
+import { registerUser } from "../../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
 
 function Registration() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const dispatch = useDispatch()
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(registerUser({name , email , password}))
     console.log("registration details", { name, email, password });
     setEmail("");
     setPassword("");
@@ -27,7 +31,7 @@ function Registration() {
           </div>
           <form onSubmit={(e)=>handleSubmit(e)}>
             <div>
-              <p className="font-semibold">Email:</p>
+              <p className="font-semibold">Name:</p>
               <input
                 type="name"
                 name="name"
@@ -63,7 +67,7 @@ function Registration() {
                 type="submit"
                 className="p-2 px-5 bg-black text-white font-semibold rounded-md w-full"
               >
-                Login
+                Register
               </button>
               <p className="text-sm">
                 Don't have an account ?{" "}

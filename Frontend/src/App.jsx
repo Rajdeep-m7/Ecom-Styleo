@@ -19,10 +19,13 @@ import ProductManagement from './Components/Admin/ProductManagement'
 import EditProductPage from './Components/Admin/EditProductPage'
 import OrderManagement from './Components/Admin/OrderManagement'
 
+import { Provider } from "react-redux";
+import store from '../redux/store'
 
 
 function App() {
   return (
+    <Provider store={store}>
     <BrowserRouter>
     <ScrollToTop/>
       <Routes>
@@ -47,6 +50,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+    </Provider>
   )
 }
 
