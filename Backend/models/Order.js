@@ -58,11 +58,11 @@ const orderSchema = new mongoose.Schema(
     paidAt: {
       type: Date,
     },
-    isDeliverd: {
+    isDelivered: {
       type: Boolean,
       default: false,
     },
-    deliverdAt: {
+    deliveredAt: {
       type: Date,
     },
     paymentStatus: {
@@ -71,8 +71,8 @@ const orderSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["processing", "shipped", "deliverd", "cancelled"],
-      default: "processing",
+      enum: ["Processing", "Shipped", "Delivered", "Cancelled"],
+      default: "Processing",
     },
   },
   { timestamps: true },
