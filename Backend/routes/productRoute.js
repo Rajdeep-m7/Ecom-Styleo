@@ -249,8 +249,8 @@ productRouter.get("/:id", async(req, res)=>{
   }
 })
 
-//get similer products
-productRouter.get("/similer/:id",async(req , res)=>{
+//get similar products
+productRouter.get("/similar/:id",async(req , res)=>{
   try {
     const {id}= req.params;
     const product = await Product.findById(id);
