@@ -105,15 +105,15 @@ const adminSlice = createSlice({
         state.users= state.users.filter((user)=> user._id !==action.payload);
     })
 
-    builder.addCase(fetchUsers.pending, (state) => {
+    builder.addCase(addusers.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(fetchUsers.fulfilled, (state, action) => {
+    builder.addCase(addusers.fulfilled, (state, action) => {
       state.loading = false;
       state.users.push(action.payload.user) //add new user to the state
     });
-    builder.addCase(fetchUsers.rejected, (state, action) => {
+    builder.addCase(addusers.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     });

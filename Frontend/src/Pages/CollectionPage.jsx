@@ -2,14 +2,22 @@ import React, { useEffect, useRef, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import FilterSideBar from "../Components/Layout/FilterSideBar";
 import SortOption from "../Components/Layout/SortOption";
+import { Link, useParams, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductsByFilters } from "../../redux/slices/productSlice";
 
 function CollectionPage() {
-  const products = Array.from({ length: 20 }, (_, i) => ({
-    id: i + 1,
-    name: "Jacket",
-    price: 120,
-    image: `https://picsum.photos/300/300?random=${i + 1}`,
-  }));
+  const {collection}= useParams();
+  const[searchParams]= useSearchParams();
+  const dispatch= useDispatch()
+  const{products , loading , error}= useSelector(
+    (state)=> state.products
+  )
+  const queryParams= Object.fromEntries([...searchParams]);
+
+  useEffect(()=>{
+    dispatch(fetchProductsByFilters({collection, ...queryParams}))
+  },[dispatch , collection, searchParams])
 
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
@@ -33,6 +41,13 @@ function CollectionPage() {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [isOpen]);
+
+  if(loading){
+    return <p className="text-center">loading...</p>
+  }
+  if(error){
+    return <p className="text-center">error:{error}</p>
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
@@ -76,12 +91,12 @@ function CollectionPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
           {products.map((item) => (
-            <div
-              key={item.id}
+            <Link to={`/product/${item._id}` }
+              key={item._id}
               className="bg-white rounded-xl shadow hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
             >
               <img
-                src={item.image}
+                src={item.images[0].url}
                 alt={item.name}
                 className="w-full h-72 object-cover rounded-t-xl"
               />
@@ -89,7 +104,7 @@ function CollectionPage() {
                 <p className="font-semibold text-lg">{item.name}</p>
                 <p className="text-gray-600">${item.price}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </main>

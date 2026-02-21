@@ -35,16 +35,16 @@ function Navbar() {
         </Link>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link className="text-gray-800" to="#">
+          <Link className="text-gray-800" to="/collection?gender=Men">
             Men
           </Link>
-          <Link className="text-gray-800" to="#">
+          <Link className="text-gray-800" to="/collection?gender=Women">
             Women
           </Link>
-          <Link className="text-gray-800" to="#">
+          <Link className="text-gray-800" to="/collection?category=Top Wear">
             Top wear
           </Link>
-          <Link className="text-gray-800" to="#">
+          <Link className="text-gray-800" to="/collection?category=Bottom Wear">
             Bottom wear
           </Link>
         </div>
@@ -97,16 +97,16 @@ function Navbar() {
           <h1 className="font-semibold text-gray-900">NavBar Menu</h1>
 
           <div className="flex flex-col gap-2 mt-4">
-            <Link to="#" onClick={toggleNavBar}>
+            <Link to="/collection?gender=Men" onClick={toggleNavBar}>
               Men
             </Link>
-            <Link to="#" onClick={toggleNavBar}>
+            <Link to="/collection?gender=WoMen" onClick={toggleNavBar}>
               Women
             </Link>
-            <Link to="#" onClick={toggleNavBar}>
+            <Link to="/collection?category=Top Wear" onClick={toggleNavBar}>
               Top wear
             </Link>
-            <Link to="#" onClick={toggleNavBar}>
+            <Link to="/collection?category=Bottom Wear" onClick={toggleNavBar}>
               Bottom wear
             </Link>
           </div>

@@ -3,58 +3,24 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function NewArrivels() {
-  const products = [
-    {
-      id: 1,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=1",
-    },
-    {
-      id: 2,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=2",
-    },
-    {
-      id: 3,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=3",
-    },
-    {
-      id: 4,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=4",
-    },
-    {
-      id: 5,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=5",
-    },
-    {
-      id: 6,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=6",
-    },
-    {
-      id: 7,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=7",
-    },
-    {
-      id: 8,
-      name: "Jacket",
-      price: 120,
-      image: "https://picsum.photos/100/100?random=8",
-    },
-  ];
+  const [products , setProducts]= useState([]);
+  //const API_URL = `${import.meta.env.VITE_BACKEND_URL}`;
+  useEffect(()=>{
+    const fetchNewArrivals= async()=>{
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/products/new-arrivals`
+        )
+        setProducts(response.data);
+      } catch (error) {
+        console.log(error); 
+      }
+    }
+    fetchNewArrivals() 
+  },[])
   const [slidesToShow, setSlidesToShow] = useState(3);
   useEffect(() => {
     const handleResize = () => {
@@ -96,9 +62,9 @@ function NewArrivels() {
       
     <Slider {...settings} className="mb-10">
       {products.map((item) => (
-        <Link to={`/product/${item.id}`} key={item.id} className="px-3 p-10">
+        <Link to={`/product/${item._id}`} key={item.id} className="px-3 p-10">
           <div className="relative w-full overflow-hidden rounded-xl shadow-xl">
-          <img src={item.image} className="w-full h-75 object-cover" />
+          <img src={item.images[0].url} className="w-full h-75 object-cover" />
           <div className="absolute bottom-0 left-0 p-3 w-full bg-black/40 backdrop-blur-2xl text-white">
             <p>{item.name}</p>
             <p>${item.price}</p>

@@ -17,15 +17,15 @@ function FilterSideBar() {
   });
 
   const DEFAULT_FILTERS = {
-  category: "",
-  gender: "",
-  color: "",
-  size: [],
-  material: [],
-  brand: [],
-  minPrice: 0,
-  maxPrice: 100,
-};
+    category: "",
+    gender: "",
+    color: "",
+    size: [],
+    material: [],
+    brand: [],
+    minPrice: 0,
+    maxPrice: 100,
+  };
 
   const [priceRange, setPriceRange] = useState([0, 100]);
 
@@ -87,18 +87,20 @@ function FilterSideBar() {
   };
 
   const handlePriceChange = (e) => {
-    const newPrice = e.target.value;
+    const newPrice = Number(e.target.value);
     setPriceRange([0, newPrice]);
-    const newFilters = { ...filters, minPrice: 0, maxPrice: newPrice };
-    setFilters(newFilters);
-    updateUrlParams(newFilters);
+    setFilters((prev) => ({
+      ...prev,
+      minPrice: 0,
+      maxPrice: newPrice,
+    }));
   };
 
   const handleClearFilters = () => {
-  setFilters(DEFAULT_FILTERS);
-  setPriceRange([0, 100]);
-  setSearchParams({}); 
-};
+    setFilters(DEFAULT_FILTERS);
+    setPriceRange([0, 100]);
+    setSearchParams({});
+  };
 
   return (
     <div className=" w-full mb-10 ">
@@ -211,13 +213,29 @@ function FilterSideBar() {
         <p className="font-medium mb-2">Price Range</p>
         <input
           type="range"
-          name="priceRange"
           min={0}
           max={100}
           value={priceRange[1]}
           onChange={handlePriceChange}
+          onMouseUp={() => {
+            const newFilters = {
+              ...filters,
+              minPrice: 0,
+              maxPrice: priceRange[1],
+            };
+            updateUrlParams(newFilters);
+          }}
+          onTouchEnd={() => {
+            const newFilters = {
+              ...filters,
+              minPrice: 0,
+              maxPrice: priceRange[1],
+            };
+            updateUrlParams(newFilters);
+          }}
           className="w-full"
         />
+
         <div className="flex justify-between">
           <span>0</span>
           <span>${priceRange[1]}</span>

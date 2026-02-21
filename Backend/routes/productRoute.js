@@ -1,5 +1,5 @@
 import express from "express";
-import {protect , admin} from "../middleware/authMiddleware.js";
+import { protect, admin } from "../middleware/authMiddleware.js";
 import Product from "../models/Product.js";
 
 const productRouter = express.Router();
@@ -53,7 +53,6 @@ productRouter.post("/", protect, admin, async (req, res) => {
 
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Product add error" });
@@ -65,7 +64,7 @@ productRouter.put("/:id", protect, admin, async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-     res.status(404).json({ message: "Product not found" });
+      res.status(404).json({ message: "Product not found" });
     }
 
     const {
@@ -120,156 +119,171 @@ productRouter.put("/:id", protect, admin, async (req, res) => {
     const updatedProduct = await product.save();
 
     res.status(200).json(updatedProduct);
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-productRouter.delete("/delete/:id", protect ,admin , async(req , res)=>{
-    try {
-        const product = await Product.findById(req.params.id);
-        if(!product){
-           return res.status(401).json({message:"Product not found"});
-        }
-        await product.deleteOne();
-        res.status(201).json({message:"Product deleted successfully"});
-
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-})
-
-productRouter.get("/", async (req , res)=>{
+productRouter.delete("/delete/:id", protect, admin, async (req, res) => {
   try {
-    const {collection , size , color , gender , minPrice , maxPrice , sortBy , search , category , material , brand , limit } = req.query;
-
-    let query={};
-
-    if(collection && collection.toLocaleLowerCase() !== "all"){
-      query.collections = collections;
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(401).json({ message: "Product not found" });
     }
-    if(category && category.toLocaleLowerCase() !== "all"){
+    await product.deleteOne();
+    res.status(201).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+productRouter.get("/", async (req, res) => {
+  try {
+    const {
+      collection,
+      size,
+      color,
+      gender,
+      minPrice,
+      maxPrice,
+      sortBy,
+      search,
+      category,
+      material,
+      brand,
+      limit,
+    } = req.query;
+
+    let query = {};
+
+    if (collection && collection.toLocaleLowerCase() !== "all") {
+      query.collection = collection;
+    }
+    if (category && category.toLocaleLowerCase() !== "all") {
       query.category = category;
     }
-    if(material){
-      query.material= {$in : material.split(",")};
+    if (material) {
+      query.material = { $in: material.split(",") };
     }
-    if(brand){
-      query.brand= {$in : brand.split(",")};
+    if (brand) {
+      query.brand = { $in: brand.split(",") };
     }
-    if(size){
-      query.sizes = {$in : size.split(",")};
+    if (size) {
+      query.sizes = { $in: size.split(",") };
     }
-    if(color){
-      query.colors= {$in: [color]};
+    if (color) {
+      query.colors = { $in: [color] };
     }
-    if(gender){
-      query.gender= gender;
+    if (gender) {
+      query.gender = gender;
     }
-    if(minPrice || maxPrice){
-      query.price={};
-      if(minPrice) query.price.$gte = Number(minPrice);
-      if(maxPrice) query.price.$lte = Number(maxPrice);
+    if (minPrice || maxPrice) {
+      query.price = {};
+
+      if (minPrice) {
+        query.price.$gte = Number(minPrice);
+      }
+
+      if (maxPrice) {
+        query.price.$lte = Number(maxPrice);
+      }
     }
 
-    if(search){
-      query.$or=[
-        { name: {$regex: search , $options : "i"}},
-        {description: {$regex: search , $options : "i"}}
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
       ];
     }
 
-    let sort={};
-    if(sortBy){
-      switch(sortBy){
+    let sort = {};
+    if (sortBy) {
+      switch (sortBy) {
         case "priceAsc":
-          sort = {price:1};
+          sort = { price: 1 };
           break;
         case "priceDesc":
-          sort={price:-1};
+          sort = { price: -1 };
           break;
         case "popularity":
-          sort= {rating:-1};
+          sort = { rating: -1 };
           break;
         default:
           break;
       }
     }
 
-    let products= await Product.find(query).sort(sort).limit(Number(limit)||0);
+    let products = await Product.find(query)
+      .sort(sort)
+      .limit(Number(limit) || 0);
     res.json(products);
-
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
-})
+});
 
 //bestseller highest rating products
-productRouter.get("/best-seller", async (req,res)=>{
+productRouter.get("/best-seller", async (req, res) => {
   try {
-    const product = await Product.findOne().sort({rating:-1});
-    if(product){
+    const product = await Product.findOne().sort({ rating: -1 });
+    if (product) {
       res.status(201).json(product);
-    }
-    else{
-      return res.status(401).json({message:" best-seller product not found"});
+    } else {
+      return res
+        .status(401)
+        .json({ message: " best-seller product not found" });
     }
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
-})
+});
 
-productRouter.get("/new-arrivals",async(req,res)=>{
+productRouter.get("/new-arrivals", async (req, res) => {
   try {
-    const product = await Product.find().sort({createdAt:-1}).limit(8);
-    if(product){
+    const product = await Product.find().sort({ createdAt: -1 }).limit(8);
+    if (product) {
       res.status(201).json(product);
-    }
-    else{
-      return res.status(401).json({message:" best-seller product not found"});
+    } else {
+      return res
+        .status(401)
+        .json({ message: " best-seller product not found" });
     }
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
-})
+});
 
-productRouter.get("/:id", async(req, res)=>{
+productRouter.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if(product){
+    if (product) {
       res.status(201).json(product);
+    } else {
+      return res.status(401).json({ message: "Product not found" });
     }
-    else{
-      return res.status(401).json({message:"Product not found"});
-    }
-    
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
-})
+});
 
 //get similar products
-productRouter.get("/similar/:id",async(req , res)=>{
+productRouter.get("/similar/:id", async (req, res) => {
   try {
-    const {id}= req.params;
+    const { id } = req.params;
     const product = await Product.findById(id);
-    if(!product){
-      return res.status(401).json({message:"Product not found"});
+    if (!product) {
+      return res.status(401).json({ message: "Product not found" });
     }
     const similerProducts = await Product.find({
-      _id:{$ne : id},
+      _id: { $ne: id },
       gender: product.gender,
       category: product.category,
     }).limit(4);
 
     res.json(similerProducts);
-
   } catch (error) {
-    res.status(500).send(error.message)
+    res.status(500).send(error.message);
   }
-})
-
-
+});
 
 export default productRouter;
