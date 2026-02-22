@@ -25,7 +25,8 @@ checkoutRouter.post("/",protect, async(req , res)=>{
         });
         res.status(201).json(newCheckout);
     } catch (error) {
-        res.status(500).send(error.message)
+        console.log(error)
+        res.status(500).json(error.message)
     }
 })
 
@@ -51,7 +52,7 @@ checkoutRouter.put("/:id/pay",protect , async(req , res)=>{
             res.status(404).json({message:"Invalid payment status"})
         }
     } catch (error) {
-        res.status(500).send(error.message)
+        res.status(500).json(error.message)
     }
 })
 
@@ -70,7 +71,7 @@ checkoutRouter.post("/:id/finalize",protect , async(req , res)=>{
                 paymentMethod: checkout.paymentMethod,
                 shippingAddress: checkout.shippingAddress,
                 totalPrice : checkout.totalPrice,
-                idPaid: true,
+                isPaid: true,
                 paidAt: checkout.paidAt,
                 isDeliverd: false,
                 paymentStatus: "paid",

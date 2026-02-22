@@ -1,63 +1,115 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PaypalButton from "./PaypalButton";
+import { useDispatch, useSelector } from "react-redux";
+import { createCheckout } from "../../../redux/slices/checkoutSlice";
+import axios from "axios";
 
 function CheckOut() {
-  const cart = {
-    products: [
-      {
-        name: "Jacket",
-        size: "M",
-        price: 120,
-        color:"Black",
-        image: "https://picsum.photos/150?random=1",
-      },
-      {
-        name: "Sneaker",
-        size: "42",
-        price: 80,
-        color:"white",
-        image: "https://picsum.photos/150?random=2",
-      },
-    ],
-    totalPrice: 200,
-  };
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const {cart , loading , error}=useSelector(
+    (state)=> state.cart
+  )
+  const {user}= useSelector(
+    (state)=> state.auth
+  )
+
   const [checkOutId , setCheckOutId]= useState(null)
-  const [shippinngAddress, setShippingAddress] = useState({
+  const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
     lastName: "",
     address: "",
     city: "",
-    pinCode: "",
+    postalCode: "",
     country: "",
     phone: "",
   });
 
-  const handleSubmit=(e)=>{
+  useEffect(()=>{
+    if(!cart || !cart.products || cart.products.length === 0){
+      navigate("/");
+      console.log(cart);
+    }
+  },[cart , navigate])
+
+  const handleSubmit= async (e)=>{
     e.preventDefault();
-    setCheckOutId(123);
+    if(cart && cart.products.length > 0){
+      const res = await dispatch(
+        createCheckout({
+          checkoutItems : cart.products,
+          shippingAddress,
+          paymentMethod: "PayPal",
+          totalPrice: cart.totalPrice,
+        })
+      );
+      if(res.payload && res.payload._id){
+        setCheckOutId(res.payload._id)
+      }
+    }
   }
 
-  function handlePayment(details) {
-  console.log(details);
-  console.log(details.id); 
-  console.log(details.payer.email_address);
-  console.log(details.purchase_units[0].payments.captures[0].id);
-  navigate("/order-confirm")
+  const handlePayment= async(details) =>{
+    try {
+      console.log(details);
+      
+      const response =await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkOutId}/pay`,{
+        paymentStatus: "paid" , paymentDetails: details
+      },
+        {
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`
+          }
+        }
+      )
+      if(response.status === 200){
+        await handleFinalizeCHeckout(checkOutId)
+      }else{
+        console.log(error);
+      }
+    } catch (error) {
+      console.error(error);   
+    }  
+};
+
+const handleFinalizeCHeckout= async(checkoutId)=>{
+  try {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/checkout/${checkoutId}/finalize`,{},
+      {
+        headers:{
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`
+        }
+      }
+    )
+    if(response.status === 200){
+      navigate("/order-confirm")
+    }else{
+      console.log(error)
+    }
+  } catch (error) {
+    console.error(error);  
+  }
+}
+
+if(loading)return <p className="text-center">Loading cart..</p>
+if(error)return <p className="text-center">Error: {error}</p>
+if(!cart || !cart.products || cart.products.length === 0){
+  return <p className="text-center">Your cart is empty</p>
 }
 
   return (
     <div className="grid grid-cols-1 justify-around lg:grid-cols-2 gap-8 py-10 px-6 tracking-tighter">
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-lg mb-4 uppercase">Checkout</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e)=>handleSubmit(e)}>
           <h3 className="text-lg mb-4">Contact Details</h3>
           <div className="mb-4">
             <p className="blocl text-gray-700">Email</p>
             <input
               type="email"
-              value="user@example"
+              value={user ? user.email : ""}
               className="w-full p-2 border rounded"
               disabled
             />
@@ -68,10 +120,10 @@ function CheckOut() {
               <p className="block text-gray-700">First Name</p>
               <input
                 type="text"
-                value={shippinngAddress.firstName}
+                value={shippingAddress.firstName}
                 onChange={(e) =>
                   setShippingAddress({
-                    ...shippinngAddress,
+                    ...shippingAddress,
                     firstName: e.target.value,
                   })
                 }
@@ -83,10 +135,10 @@ function CheckOut() {
               <p className="block text-gray-700">last Name</p>
               <input
                 type="text"
-                value={shippinngAddress.lastName}
+                value={shippingAddress.lastName}
                 onChange={(e) =>
                   setShippingAddress({
-                    ...shippinngAddress,
+                    ...shippingAddress,
                     lastName: e.target.value,
                   })
                 }
@@ -99,10 +151,10 @@ function CheckOut() {
             <p className="block text-gray-700">Address </p>
             <input
               type="text"
-              value={shippinngAddress.address}
+              value={shippingAddress.address}
               onChange={(e) =>
                 setShippingAddress({
-                  ...shippinngAddress,
+                  ...shippingAddress,
                   address: e.target.value,
                 })
               }
@@ -115,10 +167,10 @@ function CheckOut() {
               <p className="block text-gray-700">City</p>
               <input
                 type="text"
-                value={shippinngAddress.city}
+                value={shippingAddress.city}
                 onChange={(e) =>
                   setShippingAddress({
-                    ...shippinngAddress,
+                    ...shippingAddress,
                     city: e.target.value,
                   })
                 }
@@ -130,11 +182,11 @@ function CheckOut() {
               <p className="block text-gray-700">Pin Code</p>
               <input
                 type="text"
-                value={shippinngAddress.pinCode}
+                value={shippingAddress.postalCode}
                 onChange={(e) =>
                   setShippingAddress({
-                    ...shippinngAddress,
-                    pinCode: e.target.value,
+                    ...shippingAddress,
+                    postalCode: e.target.value,
                   })
                 }
                 className="w-full p-2 border rounded"
@@ -146,10 +198,10 @@ function CheckOut() {
             <p className="block text-gray-700">Country</p>
             <input
               type="text"
-              value={shippinngAddress.country}
+              value={shippingAddress.country}
               onChange={(e) =>
                 setShippingAddress({
-                  ...shippinngAddress,
+                  ...shippingAddress,
                   country: e.target.value,
                 })
               }
@@ -161,10 +213,10 @@ function CheckOut() {
             <p className="block text-gray-700">Phone Number </p>
             <input
               type="text"
-              value={shippinngAddress.phphone}
+              value={shippingAddress.phone}
               onChange={(e) =>
                 setShippingAddress({
-                  ...shippinngAddress,
+                  ...shippingAddress,
                   phone: e.target.value,
                 })
               }
@@ -178,7 +230,7 @@ function CheckOut() {
               (<div>
                 <p className="text-lg mb-4">Pay with Paypal</p>
                 <PaypalButton 
-                amount={100}
+                amount={cart.totalPrice}
                 onSuccess={handlePayment}
                 onError={(err)=> alert(err.message)}
                 />

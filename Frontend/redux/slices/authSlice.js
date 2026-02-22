@@ -43,7 +43,7 @@ const authSlice = createSlice({
     reducers:{
         logout: (state)=>{
             state.user= null;
-            state.guestId = `guest_${new Date().getItem()}`;
+            state.guestId = `guest_${new Date().getTime()}`;
             localStorage.removeItem("userInfo");
             localStorage.removeItem("userToken");
             localStorage.setItem("guestId" , state.guestId)
@@ -53,7 +53,7 @@ const authSlice = createSlice({
             localStorage.setItem("guestId" , state.guestId);
         }
     },
-    extraReducer: (builder)=>{
+    extraReducers: (builder)=>{
         builder.addCase(loginUser.pending, (state)=>{
             state.loading = true;
             state.error = null;
@@ -72,7 +72,7 @@ const authSlice = createSlice({
         })
         builder.addCase(registerUser.fulfilled, (state , action)=>{
             state.loading = false;
-            state.error = action.payload;
+            state.user = action.payload;
         })
         builder.addCase(registerUser.rejected, (state , action)=>{
             state.loading = false;
