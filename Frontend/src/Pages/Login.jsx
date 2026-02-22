@@ -1,17 +1,43 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import login from "../assets/assets/login.webp";
 import { loginUser } from "../../redux/slices/authSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Login() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, guestId } = useSelector((state) => state.auth);
+  const { cart } = useSelector((state) => state.cart);
+
+  const redirect = new URLSearchParams(location.search).get("redirect") || "/";
+  const isCheckOutRedirect = redirect.includes("checkout");
+
+  useEffect(() => {
+    if (user) {
+      if (cart?.products.length > 0 && guestId) {
+        dispatch(merge({ guestId, user })).then(() => {
+          navigate(isCheckOutRedirect ? "/checkout" : "/");
+        });
+      } else {
+        navigate(isCheckOutRedirect ? "/checkout" : "/");
+      }
+    }
+  }, [user, guestId, cart, navigate, isCheckOutRedirect, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(loginUser({email ,password}))
+    dispatch(loginUser({ email, password })).then((res) => {
+      if (res.meta.requestStatus === "fulfilled") {
+        const redirectPath = isCheckOutRedirect ? "/checkout" : "/";
+
+        navigate(redirectPath);
+      }
+    });
+
     //console.log("login details", { email, password });
     setEmail("");
     setPassword("");
@@ -58,7 +84,10 @@ function Login() {
             </button>
             <p className="text-sm">
               Don't have an account ?{" "}
-              <Link to="/registration" className="text-blue-800">
+              <Link
+                to={`/registration?redirect=${encodeURIComponent(redirect)}`}
+                className="text-blue-800"
+              >
                 Register
               </Link>
             </p>

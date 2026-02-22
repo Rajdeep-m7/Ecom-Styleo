@@ -7,9 +7,14 @@ import { FaInstagram, FaMeta, FaXTwitter } from "react-icons/fa6";
 
 import SearchBar from "./SearchBar";
 import CartDrawer from "../Layout/CartDrawer";
+import { useSelector } from "react-redux";
 
 function Navbar() {
-  const [cart, setCart] = useState(false);
+  const {cart}= useSelector(
+    (state)=> state.cart
+  )
+  const cartItemCount = cart?.products?.reduce((total , product)=> total + product.quantity, 0)|| 0;
+  const [isCart, setCart] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleNavBar = () => setIsOpen((prev) => !prev);
@@ -61,9 +66,10 @@ function Navbar() {
               className="h-6 w-6 cursor-pointer"
               onClick={() => setCart(true)}
             />
-            <p className="absolute -top-1 right-0 text-white text-xs bg-orange-600 rounded-full px-1">
-              3
-            </p>
+            {cartItemCount > 0 && (<p className="absolute -top-1 right-0 text-white text-xs bg-orange-600 rounded-full px-1">
+              {cartItemCount}
+            </p>)}
+            
           </div>
 
           <div className="overflow-hidden">
@@ -76,7 +82,7 @@ function Navbar() {
         </div>
       </div>
 
-      <CartDrawer cart={cart} setCart={setCart} />
+      <CartDrawer isCart={isCart} setCart={setCart} />
 
       {isOpen && (
         <div

@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { fetchProductsByFilters, setFilters } from "../../../redux/slices/productSlice";
 
 function SearchBar() {
   const [searchTerm, setSearchterm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
   const handleSubmit=(e)=>{
     e.preventDefault();
-    console.log("seacr Item:", searchTerm);
+    dispatch(setFilters({search : searchTerm}));
+    dispatch(fetchProductsByFilters({search : searchTerm}));
+    navigate(`/collection?search=${searchTerm}`)
     setIsOpen(false);
   }
   return (

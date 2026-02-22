@@ -9,7 +9,7 @@ export const fetchProductsByFilters = createAsyncThunk(
     color,
     gender,
     minPrice,
-    maxprice,
+    maxPrice,
     sortBy,
     search,
     category,
@@ -23,7 +23,7 @@ export const fetchProductsByFilters = createAsyncThunk(
     if (color) query.append("color", color);
     if (gender) query.append("gender", gender);
     if (minPrice) query.append("minPrice", minPrice);
-    if (maxprice) query.append("maxprice", maxprice);
+    if (maxPrice) query.append("maxPrice", maxPrice);
     if (sortBy) query.append("sortBy", sortBy);
     if (search) query.append("search", search);
     if (category) query.append("category", category);
@@ -54,14 +54,14 @@ export const updateProduct = createAsyncThunk(
     const response = await axios.put(
       `${import.meta.env.VITE_BACKEND_URL}/api/products/${id}`,
       productData,
-    );
     {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("userToken")}`;
+        Authorization: `Bearer ${localStorage.getItem("userToken")}`
       }
     }
+  );
     return response.data;
-  },
+  }
 );
 
 export const fetchSimilarProducts = createAsyncThunk(
@@ -89,7 +89,7 @@ const productSlice = createSlice({
       color: "",
       gender: "",
       minPrice: "",
-      maxprice: "",
+      maxPrice: "",
       sortBy: "",
       search: "",
       category: "",
@@ -108,7 +108,7 @@ const productSlice = createSlice({
         color: "",
         gender: "",
         minPrice: "",
-        maxprice: "",
+        maxPrice: "",
         sortBy: "",
         search: "",
         category: "",
@@ -150,7 +150,7 @@ const productSlice = createSlice({
     })
     builder.addCase(updateProduct.fulfilled,(state , action)=>{
         state.loading= false;
-        state.updateProduct = action.payload;
+        const updateProduct = action.payload;
         const index= state.products.findIndex(
             (product)=> product.id === updateProduct._id
         );
