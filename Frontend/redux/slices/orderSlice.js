@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export const fetchUserOrder = createAsyncThunk(
-  "orders/fetchhUserOrders",
-  async (__DO_NOT_USE__ActionTypes, { rejectWithValue }) => {
+export const fetchUserOrders = createAsyncThunk(
+  "orders/fetchUserOrders",
+  async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/my-orders`,
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/my-orders`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -15,7 +15,9 @@ export const fetchUserOrder = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || { message: error.message },
+      );
     }
   },
 );
@@ -24,7 +26,7 @@ export const fetchOrderDetails = createAsyncThunk(
   "orders/fetchOrderDetails",
   async (orderId, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`,
         {
           headers: {
@@ -34,7 +36,9 @@ export const fetchOrderDetails = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error.response?.data || { message: error.message },
+      );
     }
   },
 );
@@ -50,15 +54,15 @@ const orderSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchUserOrder.pending, (state) => {
+    builder.addCase(fetchUserOrders.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(fetchUserOrder.fulfilled, (state, action) => {
+    builder.addCase(fetchUserOrders.fulfilled, (state, action) => {
       state.loading = false;
       state.orders = action.payload;
     });
-    builder.addCase(fetchUserOrder.rejected, (state, action) => {
+    builder.addCase(fetchUserOrders.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     });

@@ -1,45 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Link, redirect } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link,  useNavigate } from "react-router-dom";
+import { fetchUserOrders } from "../../redux/slices/orderSlice";
 
 function MyOrders() {
-  const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const { orders , loading , error}= useSelector(
+    (state)=> state.orders
+  )
+  
+  useEffect(()=>{
+    dispatch(fetchUserOrders());
+  },[dispatch])
 
-  useEffect(() => {
-    setTimeout(() => {
-      const mockOrders = [
-        {
-          id: "12345",
-          createdAt: new Date(),
-          shippingAddress: { city: "Siliguri", country: "India" },
-          orderItems: [
-            {
-              name: "Product 1",
-              image: "https://picsum.photos/500/500?random=1",
-            },
-          ],
-          totalPrice: 100,
-          isPaid: true,
-        },
-        {
-          id: "12346",
-          createdAt: new Date(),
-          shippingAddress: { city: "Siliguri", country: "India" },
-          orderItems: [
-            {
-              name: "Product 2",
-              image: "https://picsum.photos/500/500?random=2",
-            },
-          ],
-          totalPrice: 250,
-          isPaid: false,
-        },
-      ];
-
-      setOrders(mockOrders);
-      setLoading(false);
-    }, 1000);
-  }, []);
+  if(error)return <p>Error : {error}</p>
 
   return (
     <div className="space-y-4 p-3 md:p-7">
@@ -74,7 +50,7 @@ function MyOrders() {
               </tr>
             ) : (
               orders.map((order) => (
-                <tr key={order.id} className=" hover:bg-gray-100">
+                <tr key={order._id} className=" hover:bg-gray-100">
                   <td className="p-2">
                     <img
                       src={order.orderItems[0]?.image}
@@ -84,13 +60,13 @@ function MyOrders() {
                   </td>
 
                   <td className="p-2 text-blue-500 hover:underline">
-                    <Link to={`/order/${order.id}`} className="cursor-pointer">
-                      {order.id}
+                    <Link to={`/order/${order._id}`} className="cursor-pointer">
+                      {order._id}
                     </Link>
                   </td>
 
                   <td className="p-2">
-                    {order.createdAt.toLocaleDateString()}
+                    {new Date(order.createdAt).toLocaleDateString()}
                   </td>
 
                   <td className="p-2">

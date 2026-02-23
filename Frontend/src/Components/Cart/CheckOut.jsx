@@ -64,11 +64,7 @@ function CheckOut() {
           }
         }
       )
-      if(response.status === 200){
-        await handleFinalizeCHeckout(checkOutId)
-      }else{
-        console.log(error);
-      }
+      await handleFinalizeCHeckout(checkOutId)
     } catch (error) {
       console.error(error);   
     }  
@@ -83,11 +79,7 @@ const handleFinalizeCHeckout= async(checkoutId)=>{
         }
       }
     )
-    if(response.status === 200){
       navigate("/order-confirm")
-    }else{
-      console.log(error)
-    }
   } catch (error) {
     console.error(error);  
   }

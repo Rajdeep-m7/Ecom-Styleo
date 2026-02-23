@@ -1,35 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 function OrderConfirmation() {
-  const checkOut = {
-    id: "12323",
-    createdAt: new Date(),
-    checkoutItems: [
-      {
-        id: "1",
-        name: "Jacket",
-        size: "M",
-        price: 120,
-        quantity: 1,
-        color: "Black",
-        image: "https://picsum.photos/150?random=1",
-      },
-      {
-        id: "2",
-        name: "Sneaker",
-        size: "42",
-        price: 80,
-        quantity: 1,
-        color: "white",
-        image: "https://picsum.photos/150?random=2",
-      },
-    ],
-    shippingAddress: {
-      address: "734004",
-      city: "Siliguri",
-      country: "India",
-    },
-  };
+  const disptach = useDispatch();
+  const navigate = useNavigate();
+  const {checkout}= useSelector(
+    (state)=> state.checkout
+  )
+  console.log(checkout);
+  
+  useEffect(()=>{
+    if(checkout && checkout._id){
+      disptach(clearCart());
+      localStorage.removeItem("cart")
+    }else{
+      navigate("/my-orders")
+    }
+  },[checkout , disptach , navigate])
 
   const calculateDelivery = (createdAt) => {
     const orderDate = new Date(createdAt);
@@ -42,26 +31,26 @@ function OrderConfirmation() {
         Thank You for Your Order !
       </h1>
 
-      {checkOut && (
+      {checkout && (
         <div className="p-6 rounded-lg border">
           <div className="flexx justify-between mb-20">
             <div>
               <h2 className="text-xl font-semibold">
-                Order ID : {checkOut.id}
+                Order ID : {checkout.id}
               </h2>
               <p>
-                Order Date : {new Date(checkOut.createdAt).toLocaleDateString()}
+                Order Date : {new Date(checkout.createdAt).toLocaleDateString()}
               </p>
             </div>
             <div>
               <p className="text-emerald-700 text-sm">
-                Estimated Delivery: {calculateDelivery(checkOut.createdAt)}
+                Estimated Delivery: {calculateDelivery(checkout.createdAt)}
               </p>
             </div>
           </div>
           <div className="mb-20 ">
-            {checkOut.checkoutItems.map((item) => (
-              <div key={item.id} className="flex items-center mb-4">
+            {checkout.checkoutItems.map((item) => (
+              <div key={item._id} className="flex items-center mb-4">
                 <img
                   src={item.image}
                   className="w-16 h-16 object-cover rounded-md mr-4"
@@ -86,9 +75,9 @@ function OrderConfirmation() {
             </div>
             <div>
                 <h4 className="text-lg font-semibold mb-2">Delivery</h4>
-                <p className="text-gray-600">{checkOut.shippingAddress.address}</p>
-                <p className="text-gray-600">{checkOut.shippingAddress.city}, {" "}
-                    {checkOut.shippingAddress.country}
+                <p className="text-gray-600">{checkout.shippingAddress.address}</p>
+                <p className="text-gray-600">{checkout.shippingAddress.city}, {" "}
+                    {checkout.shippingAddress.country}
                 </p>
             </div>
           </div>
