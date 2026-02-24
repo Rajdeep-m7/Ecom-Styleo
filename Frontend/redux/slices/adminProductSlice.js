@@ -6,7 +6,7 @@ const API_URL = `${import.meta.env.VITE_BACKEND_URL}`;
 export const fetchAdminProducts = createAsyncThunk(
   "adminProducts/fetchAdminProducts",
   async () => {
-    const response = await axios.get(`${API_URL}//api/admin/products`, {
+    const response = await axios.get(`${API_URL}/api/admin/products`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
       },
@@ -19,7 +19,7 @@ export const createProduct = createAsyncThunk(
   "adminProducts/createProduct",
   async (productData) => {
     const response = await axios.post(
-      `${API_URL}/api/admin/products`,
+      `${API_URL}/api/products`,
       productData,
       {
         headers: {

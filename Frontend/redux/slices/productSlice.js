@@ -158,7 +158,7 @@ const productSlice = createSlice({
             state.products[index]= updateProduct;
         }
     })
-    builder.addCase(updateProduct.rejected,(state)=>{
+    builder.addCase(updateProduct.rejected,(state, action)=>{
         state.loading= false;
         state.error = action.error.message;
     })

@@ -12,7 +12,11 @@ import { useSelector } from "react-redux";
 function Navbar() {
   const {cart}= useSelector(
     (state)=> state.cart
-  )
+  );
+  const {user} = useSelector(
+    (state)=> state.auth
+  );
+
   const cartItemCount = cart?.products?.reduce((total , product)=> total + product.quantity, 0)|| 0;
   const [isCart, setCart] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -55,8 +59,11 @@ function Navbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link to="/admin" className="px-2 text-sm rounded bg-black text-white">Admin
-          </Link>
+          {user && user.role === "admin" && 
+          (
+            <Link to="/admin" className="px-2 text-sm rounded bg-black text-white">Admin
+            </Link>
+          )}
           <Link to="/profile">
             <AiOutlineUser className="h-6 w-6" />
           </Link>

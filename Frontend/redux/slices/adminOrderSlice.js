@@ -7,7 +7,7 @@ export const fetchAllOrders = createAsyncThunk(
   "adminOrders/fetchAllOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/api/admin/order`, {
+      const response = await axios.get(`${API_URL}/api/admin/orders`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
@@ -24,7 +24,7 @@ export const updateOrderStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `${API_URL}/api/admin/order/${id}`,
+        `${API_URL}/api/admin/orders/${id}`,
         { status },
         {
           headers: {
@@ -43,7 +43,7 @@ export const deleteOrder = createAsyncThunk(
   "adminOrders/deleteOrder",
   async (id, { rejectWithValue }) => {
     try {
-      await axios.delete(`${API_URL}/api/admin/order/${id}`, {
+      await axios.delete(`${API_URL}/api/admin/orders/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
@@ -73,7 +73,7 @@ const adminOrderSlice = createSlice({
     builder.addCase(fetchAllOrders.fulfilled, (state, action) => {
       state.loading = false;
       state.orders = action.payload;
-      state.totalOrders - action.payload.length;
+      state.totalOrders = action.payload.length;
       const totalSales = action.payload.reduce((acc, order) => {
         return acc + order.totalPrice;
       }, 0);
