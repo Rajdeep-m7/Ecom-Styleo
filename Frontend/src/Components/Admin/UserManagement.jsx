@@ -59,8 +59,8 @@ function UserManagement() {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">User Management</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p>Error : {error}</p>}
+      {loading && <p className="text-center">Loading...</p>}
+      {error && <p className="text-center">Error : {error}</p>}
       <div className="rounded-lg mb-6">
         <h3 className="text-lg font-bold mb-4">Add New Users</h3>
         <form onSubmit={handleSubmit}>

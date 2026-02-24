@@ -26,8 +26,8 @@ function OrderManagement() {
       dispatch(updateOrderStatus({id: orderId , status}))
     }
 
-    if(loading)return <p>Loading...</p>
-    if(error)return <p>Error: {error}</p>
+    if(loading)return <p className="text-center mt-5">Loading...</p>
+    if(error)return <p className="text-center mt-5">Error: {error}</p>
   return (
     <div className=' p-3 md:p-6'>
         <div>
@@ -52,7 +52,7 @@ function OrderManagement() {
                   className="border-b hover:bg-gray-50 cursor-pointer"
                 >
                   <td className="p-4">#{order._id}</td>
-                  <td className="p-4">{order.user.email}</td>
+                  <td className="p-4">{order.user.name}</td>
                   <td className="p-4">${order.totalPrice}</td>
                   <td className="p-4">
                     <select
@@ -62,14 +62,14 @@ function OrderManagement() {
                       }
                       className="p-2 border rounded"
                     >
-                      <option value="proccesing">Proccesing</option>
-                      <option value="shippined">Shippined</option>
-                      <option value="deliverd">Deliverd</option>
-                      <option value="cancelled">Cancelled</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>
                   <td>
-                    <button className="bg-green-600 min-w-fit rounded py-2 px-4 text-white font-semibold" onClick={()=>handleStatusChange(order.id, "delivered")}>Mark as Deliverd</button>
+                    <button className="bg-green-600 min-w-fit rounded py-2 px-4 text-white font-semibold" onClick={()=>handleStatusChange(order._id, "Delivered")}>Mark as Deliverd</button>
                 </td>
                 </tr>
               ))

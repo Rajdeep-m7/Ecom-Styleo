@@ -11,7 +11,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId ,loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   const redirect = new URLSearchParams(location.search).get("redirect") || "/";
@@ -34,12 +34,9 @@ function Login() {
     dispatch(loginUser({ email, password })).then((res) => {
       if (res.meta.requestStatus === "fulfilled") {
         const redirectPath = isCheckOutRedirect ? "/checkout" : "/";
-
         navigate(redirectPath);
       }
     });
-
-    //console.log("login details", { email, password });
     setEmail("");
     setPassword("");
   };
@@ -81,7 +78,7 @@ function Login() {
               type="submit"
               className="p-2 px-5 bg-black text-white font-semibold rounded-md w-full"
             >
-              Login
+              {loading ? "loading..." : "Login"}
             </button>
             <p className="text-sm">
               Don't have an account ?{" "}

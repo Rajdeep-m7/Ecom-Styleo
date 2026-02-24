@@ -11,6 +11,7 @@ export const fetchAdminProducts = createAsyncThunk(
         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
       },
     });
+
     return response.data;
   },
 );
@@ -18,15 +19,12 @@ export const fetchAdminProducts = createAsyncThunk(
 export const createProduct = createAsyncThunk(
   "adminProducts/createProduct",
   async (productData) => {
-    const response = await axios.post(
-      `${API_URL}/api/products`,
-      productData,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-        },
+    const response = await axios.post(`${API_URL}/api/products`, productData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("userToken")}`,
       },
-    );
+    });
+
     return response.data;
   },
 );
@@ -34,8 +32,8 @@ export const createProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "adminProducts/updateProduct",
   async ({ id, productData }) => {
-    const response = await axios.post(
-      `${API_URL}/api/admin/products/${id}`,
+    const response = await axios.put(
+      `${API_URL}/api/products/${id}`,
       productData,
       {
         headers: {
@@ -43,44 +41,53 @@ export const updateProduct = createAsyncThunk(
         },
       },
     );
+
     return response.data;
   },
 );
 
 export const deleteProduct = createAsyncThunk(
-  "adminProducts/deleteProducts",
+  "adminProducts/deleteProduct",
   async (id) => {
-    {
-      await axios.delete(`${API_URL}/api/admin/products/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-        },
-      });
-      return id;
-    }
+    await axios.delete(`${API_URL}/api/products/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+      },
+    });
+
+    return id;
   },
 );
 
 const adminProductSlice = createSlice({
   name: "adminProduct",
+
   initialState: {
     products: [],
-    loading: null,
+    loading: false,
     error: null,
   },
+
   reducers: {},
+
   extraReducers: (builder) => {
     builder.addCase(fetchAdminProducts.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
+
     builder.addCase(fetchAdminProducts.fulfilled, (state, action) => {
       state.loading = false;
       state.products = action.payload;
     });
+
     builder.addCase(fetchAdminProducts.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload.message;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(createProduct.pending, (state) => {
+      state.loading = true;
     });
 
     builder.addCase(createProduct.fulfilled, (state, action) => {
@@ -88,21 +95,49 @@ const adminProductSlice = createSlice({
       state.products.push(action.payload);
     });
 
+    builder.addCase(createProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(updateProduct.pending, (state) => {
+      state.loading = true;
+    });
+
     builder.addCase(updateProduct.fulfilled, (state, action) => {
       state.loading = false;
+
+      const updatedProduct = action.payload;
+
       const index = state.products.findIndex(
-        (product) => product._id === state.payload._id,
+        (product) => product._id === updatedProduct._id,
       );
+
       if (index !== -1) {
-        state.products[index] = action.payload;
+        state.products[index] = updatedProduct;
       }
+    });
+
+    builder.addCase(updateProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(deleteProduct.pending, (state) => {
+      state.loading = true;
     });
 
     builder.addCase(deleteProduct.fulfilled, (state, action) => {
       state.loading = false;
+
       state.products = state.products.filter(
         (product) => product._id !== action.payload,
       );
+    });
+
+    builder.addCase(deleteProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
     });
   },
 });
