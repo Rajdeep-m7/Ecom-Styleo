@@ -24,8 +24,6 @@ function AdminHomePage() {
     dispatch(fetchAdminProducts());
     dispatch(fetchAllOrders());
   },[dispatch]);
-  console.log(products);
-  console.log(totalOrders);
   
   
   return (

@@ -1,18 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { fetchAllOrders, updateOrderStatus } from '../../../redux/slices/adminOrderSlice';
 
 function OrderManagement() {
-    const orders=[
-        {
-            id:12345,
-            name:"Rajdeep Majumdar",
-            price:110,
-            status:"Proccessing"
-        }
-    ];
+    const dispatch= useDispatch();
+    const navigate = useNavigate()
+    const { user }= useSelector(
+      (state)=> state.auth
+    )
+    const { orders , loading , error}= useSelector(
+      (state)=> state.adminOrder
+    );
+    useEffect(()=>{
+      if( user && user.role !=="admin"){
+        navigate("/")
+      }else{
+        dispatch(fetchAllOrders())
+      }
+    },[dispatch,user, navigate])
 
+    console.log(orders);
+    
     const handleStatusChange=(orderId , status)=>{
-        console.log(orderId , status); 
+      dispatch(updateOrderStatus({id: orderId , status}))
     }
+
+    if(loading)return <p>Loading...</p>
+    if(error)return <p>Error: {error}</p>
   return (
     <div className=' p-3 md:p-6'>
         <div>
@@ -33,17 +48,17 @@ function OrderManagement() {
             {orders.length > 0 ? (
               orders.map((order) => (
                 <tr
-                  key={order.id}
+                  key={order._id}
                   className="border-b hover:bg-gray-50 cursor-pointer"
                 >
-                  <td className="p-4">#{order.id}</td>
-                  <td className="p-4">{order.name}</td>
-                  <td className="p-4">${order.price}</td>
+                  <td className="p-4">#{order._id}</td>
+                  <td className="p-4">{order.user.email}</td>
+                  <td className="p-4">${order.totalPrice}</td>
                   <td className="p-4">
                     <select
                       value={order.status}
                       onChange={(e) =>
-                        handleStatusChange(order.id, e.target.value)
+                        handleStatusChange(order._id, e.target.value)
                       }
                       className="p-2 border rounded"
                     >

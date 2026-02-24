@@ -13,9 +13,9 @@ export const fetchUsers = createAsyncThunk("admin/fetchUsers", async () => {
   return response.data;
 });
 
-export const addusers = createAsyncThunk(
+export const addUsers = createAsyncThunk(
   "admin/addUser",
-  async (userdata, { rejectWithvalue }) => {
+  async (userdata, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/users`,
@@ -28,7 +28,7 @@ export const addusers = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithvalue(error.response.data);
+      return rejectWithValue(error.response.data);
     }
   },
 );
@@ -105,15 +105,15 @@ const adminSlice = createSlice({
         state.users= state.users.filter((user)=> user._id !==action.payload);
     })
 
-    builder.addCase(addusers.pending, (state) => {
+    builder.addCase(addUsers.pending, (state) => {
       state.loading = true;
       state.error = null;
     });
-    builder.addCase(addusers.fulfilled, (state, action) => {
+    builder.addCase(addUsers.fulfilled, (state, action) => {
       state.loading = false;
-      state.users.push(action.payload.user) //add new user to the state
+      state.users.push(action.payload) //add new user to the state
     });
-    builder.addCase(addusers.rejected, (state, action) => {
+    builder.addCase(addUsers.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload.message;
     });
