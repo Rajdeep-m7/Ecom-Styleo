@@ -37,4 +37,6 @@ app.use("/api/admin/users", adminRouter);
 app.use("/api/admin/products", adminProductRouter);
 app.use("/api/admin/orders", adminOrderRouter);
 
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
