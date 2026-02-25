@@ -1,8 +1,8 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import Checkout from "../models/CheckOut.js"
-import Order from "../models/Order.js"
-import Cart from "../models/Cart.js"
+import CheckOut from "../models/checkOut.js";
+import Order from "../models/order.js"
+import Cart from "../models/cart.js"
 
 const checkoutRouter = express.Router();
 
