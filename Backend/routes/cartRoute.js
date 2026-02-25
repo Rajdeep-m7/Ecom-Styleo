@@ -1,6 +1,6 @@
 import express from "express";
 import Cart from "../models/Cart.js";
-import Product from "../models/Product.js";
+import Product from "../models/product.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const cartRouter = express.Router();

@@ -1,5 +1,5 @@
 import express from "express";
-import Product from "../models/Product.js";
+import Product from "../models/product.js";
 import { protect , admin } from "../middleware/authMiddleware.js";
 
 const adminProductRouter = express.Router();
