@@ -4,6 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node backend/index.js",
     "dev": "nodemon backend/index.js",
     "seed": "node seeder.js"
   },
