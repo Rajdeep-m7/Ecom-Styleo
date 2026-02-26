@@ -14,8 +14,25 @@ import adminOrderRouter from "./routes/adminOrderRoute.js";
 
 const app = express();
 app.use(express.json())
-app.use(cors());
 dotenv.config();
+
+const allowedOrigins = [
+  "https://styleo.onrender.com",
+  "http://localhost:5173",
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.warn("Blocked by CORS:", origin);
+      return callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 
 const PORT = process.env.PORT;
 
