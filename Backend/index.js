@@ -13,26 +13,49 @@ import adminProductRouter from "./routes/adminProductRoute.js";
 import adminOrderRouter from "./routes/adminOrderRoute.js";
 
 const app = express();
-app.use(express.json())
 dotenv.config();
 
-const allowedOrigins = [
-  "https://styleo.onrender.com",
-  "http://localhost:5173",
-];
+app.use(express.json());
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      console.warn("Blocked by CORS:", origin);
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
+  origin: [
+    "https://styleo.onrender.com",
+    "http://localhost:5173"
+  ],
+  credentials: true
 }));
+
+app.options("*", cors());
+
+app.use((req, res, next) => {
+
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://styleo.onrender.com"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,POST,PUT,DELETE,OPTIONS"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization"
+  );
+
+  res.setHeader(
+    "Access-Control-Allow-Credentials",
+    "true"
+  );
+
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
+
+  next();
+});
+
 
 const PORT = process.env.PORT;
 
@@ -54,6 +77,4 @@ app.use("/api/admin/users", adminRouter);
 app.use("/api/admin/products", adminProductRouter);
 app.use("/api/admin/orders", adminOrderRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+export default app;
