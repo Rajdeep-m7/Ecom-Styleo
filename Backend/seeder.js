@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Product from "./models/Product.js";
+import Product from "./models/product.js";
 import User from "./models/User.js";
 import products from "./data/product.js";
 import Cart from "./models/Cart.js"
