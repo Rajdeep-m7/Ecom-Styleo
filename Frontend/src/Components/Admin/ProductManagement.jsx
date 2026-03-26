@@ -26,7 +26,10 @@ function ProductManagement() {
     <div className="max-w-7xl mx-auto p-6">
       <div className="mt-6">
         <h2 className="text-2xl font-bold mb-4">Recent Orders</h2>
-        <div className="overflow-x-auto">
+
+        <Link to="/admin/addProducts" className="text-white p-2 border rounded bg-blue-800 font-bold my-2">Add New Product</Link>
+
+        <div className="overflow-x-auto mt-3">
           <table className="min-w-full table-fixed text-left text-gray-700">
             <thead className="bg-gray-100 text-xs uppercase text-gray-700">
               <tr>

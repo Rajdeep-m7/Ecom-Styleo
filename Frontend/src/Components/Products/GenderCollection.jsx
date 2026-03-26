@@ -10,14 +10,14 @@ function GenderCollection() {
             <img src={menCollection}  className='w-150 h-80 md:h-110 object-cover'/>
             <div className='p-5 bg-white/80 absolute left-2 bottom-3'>
                 <p>Men's collection</p>
-                <Link>Shop now</Link>
+                <Link to="collection?gender=Men">Shop now</Link>
             </div>
         </div>
         <div  className='relative'>
             <img src={womenCollection}  className='w-150 h-80 md:h-110 object-cover'/>
             <div className='p-5 bg-white/80 absolute left-2 bottom-3'>
                 <p>Women's collection</p>
-                <Link>Shop now</Link>
+                <Link to="collection?gender=Women">Shop now</Link>
             </div>
         </div>
     </div>

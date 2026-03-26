@@ -109,14 +109,14 @@ function BestSeller({ productId }) {
         <div className="md:w-1/2">
           <p className="text-xl font-bold my-2">{selectedProduct.name}</p>
 
-          {selectedProduct.originalPrice && (
+          {selectedProduct.price && (
             <p className="line-through text-gray-800">
-              ${selectedProduct.originalPrice}
+              ${selectedProduct.price}
             </p>
           )}
 
           <p className="font-semibold text-lg mb-2">
-            ${selectedProduct.price}
+            ${selectedProduct.discountPrice}
           </p>
 
           <p className="text-gray-900 font-sm">

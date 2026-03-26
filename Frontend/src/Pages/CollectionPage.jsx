@@ -102,7 +102,7 @@ function CollectionPage() {
               />
               <div className="p-4">
                 <p className="font-semibold text-lg">{item.name}</p>
-                <p className="text-gray-600">${item.price}</p>
+                <p className="text-gray-600">${item.discountPrice}</p>
               </div>
             </Link>
           ))}

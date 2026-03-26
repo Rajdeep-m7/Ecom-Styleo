@@ -53,7 +53,7 @@ function OrderDetails() {
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-2">Shipping Info</h4>
-              <p>Shiping Method : {orderDetails.shippingMethod}</p>
+              <p>Shiping Method : Standard</p>
               <p>
                 Address :{" "}
                 {`${orderDetails.shippingAddress.city}, ${orderDetails.shippingAddress.country}`}
